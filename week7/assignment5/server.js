@@ -8,7 +8,7 @@ let handlebars = require("express-handlebars").create({
 
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
-app.set("port", 8000);
+app.set("port", 6969);
 
 //BODY PARSER SET-UP
 app.use(bodyParser.urlencoded({ extended: false }));
