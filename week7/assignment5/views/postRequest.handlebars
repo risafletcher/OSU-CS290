@@ -1,0 +1,20 @@
+<h1>POST request received</h1>
+  <h2>POST checker</h2>
+  <h3>Params</h3>
+<table>
+  {{#each queryRows}}
+  <tr>
+    <td>{{this.key}}</td>
+    <td>{{this.value}}</td>
+  </tr>
+  {{/each}}
+</table>
+  <h3>Request Body</h3>
+<table>
+  {{#each reqBodyRows}}
+  <tr>
+    <td>{{this.key}}</td>
+    <td>{{this.value}}</td>
+  </tr>
+  {{/each}}
+</table>
