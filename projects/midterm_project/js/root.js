@@ -1,26 +1,40 @@
-function addToCart(id, qty = 1) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    const quantity = cart[id] ? cart[id].quantity + qty : qty;
-    console.log(cart);
-    const newCart = {
-        ...cart,
-        [id]: { quantity }
-    };
-    localStorage.setItem('cart', JSON.stringify(newCart));
-}
+const registerCartSuccessMessage = () => {
+    const addToCartButton = document.getElementsByClassName('add-to-cart-btn')[0];
+    addToCartButton.addEventListener('click', () => {
+        const actionContainer = document.getElementsByClassName('product__action-col')[0];
+        const addToListMessageContainer = document.createElement('div');
+        const addToListMessage = document.createTextNode('Product added to cart.');
+        addToListMessageContainer.appendChild(addToListMessage);
+        addToListMessageContainer.className = 'product__action-col--message';
+        actionContainer.appendChild(addToListMessageContainer);
+        setTimeout(() => addToListMessageContainer.remove(), 1000);
+    });
+};
 
-function removeFromCart(id, qty) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    let newCart = { ...cart };
-    let quantity;
-    if (cart[id].quantity <= 1 || !qty) {
-        quantity = undefined;
-        newCart[id] = undefined;
-    } else {
-        quantity = cart[id] && qty ? cart[id].quantity - qty : undefined;
-        if (!quantity) {
-            newCart[id] = undefined;
-        }
+const registerCarouselScrolling = () => {
+    const rightArrow = document.getElementsByClassName('carousel__right-arrow')[0];
+    const leftArrow = document.getElementsByClassName('carousel__left-arrow')[0];
+    const carouselBody = document.getElementsByClassName('carousel__body')[0];
+    const carouselImages = document.getElementsByClassName('carousel__img');
+    leftArrow.addEventListener('click', () => carouselBody.scrollLeft -= (carouselImages[0].width));
+    rightArrow.addEventListener('click', () => carouselBody.scrollLeft += (carouselImages[0].width + 10));
+    let offsetX = 2500;
+    for (let i = 0; i < carouselImages.length; i++) {
+        setTimeout(() => carouselBody.scrollLeft += carouselImages[0].width + 10, offsetX);
+        offsetX += 2500;
     }
-    localStorage.setItem('cart', JSON.stringify(newCart));
-}
+};
+
+(function() {
+    const { pathname } = window.location;
+    switch(pathname) {
+        case '/':
+            registerCarouselScrolling();
+            break;
+        case '/product':
+            registerCartSuccessMessage();
+            break;
+        default:
+            break;
+    }
+})();
