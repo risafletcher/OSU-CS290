@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js --ext '*'",
-    "start": "nodemon server.js"
+    "start": "forever start server.js",
+    "kill": "forever stopall",
+    "clean": "rm -rf node_modules"
   },
   "author": "",
   "license": "ISC",
