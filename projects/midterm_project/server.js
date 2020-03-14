@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
-
+const cookieParser = require('cookie-parser');
+const { dollarFormatter } = require('./js/utils');
 const { products } = require('./data/products.json');
-require('./js/root');
 
 const handlebars = require('express-handlebars').create({
     defaultLayout: 'main',
@@ -19,8 +19,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 
+app.use(cookieParser());
+
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('home', { products });
 });
 
 app.get('/products', (req, res) =>
@@ -29,8 +31,48 @@ app.get('/products', (req, res) =>
 app.get('/product', (req, res) => {
     const { id } = req.query;
     const product = products.find((item) => item.id == id);
-    res.render('product', { product });
+    const addToCart = () => {
+        const cart = req.cookies['cart'] || {};
+        const quantity = cart[product.id] ? cart[product.id].quantity + 1 : 1;
+        const newCart = {
+            ...cart,
+            [product.id] : { quantity },
+        };
+        res.cookie('cart', newCart);
+    }
+    res.render('product', { product, addToCart });
 });
+
+app.get('/cart', (req, res) => {
+    let cartProducts = [];
+    console.log(req.cookies.cart);
+    for (let productId in req.cookies.cart) {
+        const queryParams = req.query;
+        const shouldRemove = queryParams.action === 'remove' && queryParams.id == productId;
+        if (shouldRemove) {
+            const cart = req.cookies['cart'] || {};
+            const newCart = { ...cart };
+            delete newCart[queryParams.id];
+            res.cookie('cart', newCart);   
+            console.log(req.cookies); 
+        } else {
+            const cartProduct = products.find(({ id }) => id == productId);
+            cartProduct.quantity = req.cookies.cart[productId].quantity;
+            cartProduct && cartProducts.push(cartProduct)
+        }
+    }
+    let totalPrice = 0;
+    cartProducts.forEach(({ price, quantity }) => totalPrice += (parseFloat(price)) * quantity);
+
+    res.render('cart', {
+        products: cartProducts,
+        totalPrice: dollarFormatter.format(totalPrice),
+    });
+});
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+})
 
 app.use((req, res) => {
     res.status(404);

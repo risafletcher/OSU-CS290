@@ -5,14 +5,30 @@
     <div class="promo-container">
         <h3>Promotional Products</h3>
         <div class="carousel">
-            <div class="carousel__left-arrow"><</div>
+            <button class="carousel__left-arrow"><</button>
             <div class="carousel__body">
-                <figure role="link">
-                    <img src="https://picsum.photos/200" alt="randomly generated image"/>
-                    <figcaption>Curent Product 1</figcaption>
-                </figure>
+                {{#each products}}
+                    <img src={{this.promoImage}} alt={{this.alt}} class="carousel__img"/>
+                {{/each}}
             </div>
-            <div class="carousel__right-arrow">></div>
+            <button class="carousel__right-arrow">></button>
         </div>
     </div>
+</section>
+
+<header>
+    <h3>Resources</h3>
+</header>
+<section>
+    <ul>
+        <li>
+            <a href="./assets/cv.pdf" download class="home__download-link">Download CV</a>
+        </li>
+        <li>
+            <a href="http://google.com" target="_blank" rel="noopener noreferrer">Google</a>
+        </li>
+        <li>
+            Photo credit: <a href="http://pixabay.com" target="_blank" rel="noopener noreferrer">Pixabay</a>
+        </li>
+    </ul>
 </section>
