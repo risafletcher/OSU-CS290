@@ -19,15 +19,26 @@ app.use(express.static(path.join(__dirname, '/')));
 
 // GET
 app.get('/', (req, res, next) => {
-    mysql.pool.query('SELECT * FROM tracker', (err, rows) => {
-        if (err) {
-            next(err);
-            return;
+    mysql.pool.query(
+        `CREATE TABLE IF NOT EXISTS tracker(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        name VARCHAR(255) NOT NULL,
+        reps INT,
+        weight INT,
+        date DATE,
+        unit VARCHAR(255))`,
+        (err) => {
+            mysql.pool.query('SELECT * FROM tracker', (err, rows) => {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                res.render('home', {
+                    results: JSON.stringify(rows)
+                })
+            })
         }
-        res.render('home', {
-            results: JSON.stringify(rows)
-        })
-    })
+    );
 });
 
 // INSERT
