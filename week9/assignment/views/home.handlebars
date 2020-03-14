@@ -2,6 +2,7 @@
     <h1>Fitness Tracker</h1>
 </header>
 <section>
+    <a href="/reset-table">Reset Table</a>
     <table>
         <thead>
             <tr>
@@ -20,23 +21,21 @@
         {{/unless}}
         {{#each results}}
             <tr id="{{this.id}}--edit-form" hidden>
-                <form action="/" method="PUT">
-                    <td><input type="text" name="name"/></td>
-                    <td><input type="text" name="reps"/></td>
-                    <td><input type="text" name="weight"/></td>
-                    <td><input type="text" name="date"/></td>
-                    <td><input type="text" name="unit"/></td>
+                <form action="/" method="POST">
+                    <input type="hidden" name="id" value={{this.id}}/>
+                    <td><input type="text" name="name" value="{{this.name}}"/></td>
+                    <td><input type="number" name="reps" value="{{this.reps}}"/></td>
+                    <td><input type="number" name="weight" value="{{this.weight}}"/></td>
+                    <td><input type="date" name="date" value="{{this.date}}"/></td>
+                    <td><input type="text" name="unit" value="{{this.unit}}"/></td>
                     <td>
-                        <button
-                            id="editButton-submit"
-                            type="submit"
-                            onclick="submitEditHandler"
-                        >Submit</button>
+                        <button id="editButton-submit" type="submit">Submit</button>
                         <button id="editButton-cancel" onclick="cancelEditHandler({{this.id}})">Cancel</button>
                     </td>
                 </form>
             </tr>
             <tr id="{{this.id}}">
+                {{this}}
                 <td>{{this.name}}</td>
                 <td>{{this.reps}}</td>
                 <td>{{this.weight}}</td>
@@ -53,15 +52,15 @@
     <h3>Add workout</h3>
     <form action="/" method="POST">
         <label for="name">Name: </label>
-        <input type="text" name="name" id="name" />
+        <input type="text" name="name" id="name" required />
         <label for="reps">Reps: </label>
-        <input type="text" name="reps" id="reps" />
+        <input type="number" name="reps" id="reps" required />
         <label for="weight">Weight: </label>
-        <input type="text" name="weight" id="weight" />
+        <input type="number" name="weight" id="weight" required />
         <label for="date">Date: </label>
-        <input type="text" name="date" id="date" />
+        <input type="date" name="date" id="date" required />
         <label for="unit">Unit: </label>
-        <input type="text" name="unit" id="unit" />
+        <input type="text" name="unit" id="unit" required />
         <button id="editButton-submit" type="submit">Submit</button>
         <button id="editButton-cancel" type="reset">Reset</button>
     </form>

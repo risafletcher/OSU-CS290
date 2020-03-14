@@ -17,6 +17,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 
+
+// RESET
+app.get('/reset-table', function (req, res, next) {
+    mysql.pool.query("DROP TABLE IF EXISTS tracker", function (err) { //replace your connection pool with the your variable containing the connection pool
+        var createString = "CREATE TABLE tracker(" +
+            "id INT PRIMARY KEY AUTO_INCREMENT," +
+            "name VARCHAR(255) NOT NULL," +
+            "reps INT," +
+            "weight INT," +
+            "date DATE," +
+            "unit VARCHAR(255))";
+        mysql.pool.query(createString, function (err) {
+            res.render('home');
+        })
+    });
+});
+
 // GET
 app.get('/', (req, res, next) => {
     mysql.pool.query(
@@ -34,39 +51,15 @@ app.get('/', (req, res, next) => {
                     return;
                 }
                 res.render('home', {
-                    results: JSON.stringify(rows)
+                    results: rows
                 })
             })
         }
     );
 });
 
-// INSERT
 app.post('/', ({
-    query: {
-        name,
-        reps,
-        weight,
-        date,
-        unit
-    }
-}, res, next) => {
-    mysql.pool.query(
-        'INSERT INTO tracker (`name`, `reps`, `weight`, `date`, `unit`) VALUES (?, ?, ?, ?, ?)',
-        [name, reps, weight, date, unit],
-        (err, result) => {
-            if (err) {
-                next(err);
-                return;
-            }
-            render('home', { results: `Inserted id ${result.insertId}` })
-        }
-    )
-});
-
-// UPDATE
-app.put('/', ({
-    query: {
+    body: {
         id,
         name,
         reps,
@@ -75,58 +68,69 @@ app.put('/', ({
         unit
     }
 }, res, next) => {
-    mysql.pool.query(
-        'SELECT * FROM tracker WHERE id=?',
-        [id],
-        (err, result) => {
-            if (err) {
-                next(err);
-                return;
-            }
-            if (result.length) {
-                const {
-                    name: currentName,
-                    reps: currentReps,
-                    weight: currentWeight,
-                    date: currentDate,
-                    unit: currentUnit
-                } = result[0];
-                mysql.pool.query(
-                    'UPDATE tracker SET name=?, reps=?, weight=?, date=?, unit=?',
-                    [
-                        name || currentName,
-                        reps || currentReps,
-                        weight || currentWeight,
-                        date || currentDate,
-                        unit || currentUnit
-                    ],
-                    (err, result) => {
-                        if (err) {
-                            next(err);
-                            return;
+    if (id) {   // UPDATE
+        mysql.pool.query(
+            'SELECT * FROM tracker WHERE id=?',
+            [id],
+            (err, result) => {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                if (result.length) {
+                    const {
+                        name: currentName,
+                        reps: currentReps,
+                        weight: currentWeight,
+                        date: currentDate,
+                        unit: currentUnit
+                    } = result[0];
+                    mysql.pool.query(
+                        'UPDATE tracker SET name = ?, reps = ?, weight = ?, date = ?, unit = ? WHERE id = ?',
+                        [
+                            name || currentName,
+                            reps || currentReps,
+                            weight || currentWeight,
+                            date || currentDate,
+                            unit || currentUnit,
+                            id
+                        ],
+                        (err, result) => {
+                            if (err) {
+                                next(err);
+                                return;
+                            }
+                            res.redirect('back');
                         }
-                        res.render('home', {
-                            results: `Updated ${result.changedRows} rows.`
-                        });
-                    }
-                );
+                    );
+                }
+            })
+    } else {    // INSERT
+        mysql.pool.query(
+            'INSERT INTO tracker (`name`, `reps`, `weight`, `date`, `unit`) VALUES (?, ?, ?, ?, ?)',
+            [name, reps, weight, date, unit],
+            (err, results) => {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                res.redirect('back');
             }
-        })
+        )
+    }
 });
 
 // DELETE
-app.delete('/', ({ query: { id } }, res, next) => {
+app.delete('/', ({ body: { id } }, res, next) => {
     mysql.pool.query(
-        'DELETE FROM tracker WHERE ID=?',
+        'DELETE FROM tracker WHERE id = ?',
         [id],
         (err, result) => {
             if (err) {
                 next(err);
                 return;
             }
-            if (result.length) {
-                res.render('home', `Deleted ${result.changedRows} rows.`);
-            }
+            res.end();
         }
     )
 })

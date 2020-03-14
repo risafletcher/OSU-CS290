@@ -23,3 +23,13 @@ function deleteHandler(id) {
     .then(() => currentRow.remove())
     .catch((err) => console.error(err));
 }
+
+function submitEditHandler(id) {
+    fetch('/', {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        mode: 'same-origin',
+        body: JSON.stringify({ id })
+    })
+    .catch((err) => console.error(err));
+}
