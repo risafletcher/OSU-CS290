@@ -1,0 +1,68 @@
+<header>
+    <h1>Fitness Tracker</h1>
+</header>
+<section>
+    <table>
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Reps</td>
+                <td>Weight</td>
+                <td>Date</td>
+                <td>Unit</td>
+                <td>Actions</td>
+            </tr>
+        </thead>
+        {{#unless results}}
+            <tr>
+                <td colspan="5"><em>Your tracker is empty.</em></td>
+            </tr>
+        {{/unless}}
+        {{#each results}}
+            <tr id="{{this.id}}--edit-form" hidden>
+                <form action="/" method="PUT">
+                    <td><input type="text" name="name"/></td>
+                    <td><input type="text" name="reps"/></td>
+                    <td><input type="text" name="weight"/></td>
+                    <td><input type="text" name="date"/></td>
+                    <td><input type="text" name="unit"/></td>
+                    <td>
+                        <button
+                            id="editButton-submit"
+                            type="submit"
+                            onclick="submitEditHandler"
+                        >Submit</button>
+                        <button id="editButton-cancel" onclick="cancelEditHandler({{this.id}})">Cancel</button>
+                    </td>
+                </form>
+            </tr>
+            <tr id="{{this.id}}">
+                <td>{{this.name}}</td>
+                <td>{{this.reps}}</td>
+                <td>{{this.weight}}</td>
+                <td>{{this.date}}</td>
+                <td>{{this.unit}}</td>
+                <td>
+                    <button id="editButton" onclick="editHandler({{this.id}})">Edit</button>
+                    <button id="deleteButton" onclick="deleteHandler({{this.id}})">Delete</button>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+
+    <h3>Add workout</h3>
+    <form action="/" method="POST">
+        <label for="name">Name: </label>
+        <input type="text" name="name" id="name" />
+        <label for="reps">Reps: </label>
+        <input type="text" name="reps" id="reps" />
+        <label for="weight">Weight: </label>
+        <input type="text" name="weight" id="weight" />
+        <label for="date">Date: </label>
+        <input type="text" name="date" id="date" />
+        <label for="unit">Unit: </label>
+        <input type="text" name="unit" id="unit" />
+        <button id="editButton-submit" type="submit">Submit</button>
+        <button id="editButton-cancel" type="reset">Reset</button>
+    </form>
+</section>

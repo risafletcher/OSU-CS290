@@ -1,0 +1,44 @@
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 5px;
+  text-align: center;
+}
+
+td:first-child {
+  font-style: italic;
+}
+
+tr:nth-child(even) {
+  background-color: #bce6dcd5;
+}
+
+tr:nth-child(odd) {
+  background-color: #96d0c5;
+}
+
+.pinkDiv {
+  display: flex;
+  background-color: rgb(249, 210, 217);
+  justify-content: center;
+  align-items: center;
+  width: 75vw;
+  height: 50px;
+  margin: 20px;
+}
+
+.innerContent {
+  text-align: center;
+
+  background-color: rgb(221, 245, 245);
+  width: 75%;
+  height: auto;
+}
+
+form {
+  border: 1px solid black;
+  margin: 20px;
+}
+
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Activity 5 - AJAX Interactions</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+    <body>
+        <h1>Weather Forecast</h1>
+        <form id="weatherForm">
+            <fieldset>
+                <legend>Search by City</legend>
+                <label for="cityName">City Name: </label>
+                <input type="text" name="cityName" id="cityName"/>
+            </fieldset>
+            OR
+            <fieldset>
+                <legend>Search by Zipcode</legend>
+                <label for="zipcode">Zipcode</label>
+                <input type="text" name="zipcode" id="zipcode" />
+            </fieldset>
+            <label for="countryCode">Country code:</label>
+            <input type="text" id="countryCode" name="countryCode" required/>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="weatherError"></div>
+        <div id="weatherResults"></div>
+
+        <h1>Dummy Form</h1>
+        <form id="dummyForm">
+            <fieldset>
+                <legend>Enter your information</legend>
+                <label for="nameInput">Name:</label>
+                <input type="text" name="nameInput" id="nameInput" />
+        
+                <label for="descriptionInput">Description:</label>
+                <input type="text" id="descriptionInput" name="descriptionInput" />
+            </fieldset>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Result</h2>
+        <ul>
+            <li><strong>Name: </strong><span id="nameResult"></span></li>
+            <li><strong>Description: </strong><span id="descriptionResult"></span></li>
+        </ul>
+        <div id="dummyError"></div>
+        <script src="./script.js" async defer></script>
+    </body>
+</html>
